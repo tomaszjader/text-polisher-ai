@@ -1,14 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect, useState } from "react";
+import TextCorrector from "@/components/TextCorrector";
+import { App as CapacitorApp } from '@capacitor/app';
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [sharedText, setSharedText] = useState<string>("");
+
+  useEffect(() => {
+    // Handle incoming text from Android Intent (when text is selected and shared)
+    const handleAppUrl = () => {
+      CapacitorApp.addListener('appUrlOpen', (event: any) => {
+        const url = event.url;
+        // Extract text from URL if it exists
+        if (url) {
+          try {
+            const urlParams = new URLSearchParams(url.split('?')[1]);
+            const text = urlParams.get('text');
+            if (text) {
+              setSharedText(decodeURIComponent(text));
+            }
+          } catch (error) {
+            console.error('Error parsing URL:', error);
+          }
+        }
+      });
+    };
+
+    handleAppUrl();
+
+    return () => {
+      CapacitorApp.removeAllListeners();
+    };
+  }, []);
+
+  return <TextCorrector initialText={sharedText} />;
 };
 
 export default Index;
