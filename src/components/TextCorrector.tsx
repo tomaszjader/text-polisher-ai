@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Preferences } from '@capacitor/preferences';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -17,29 +18,58 @@ const TextCorrector = ({ initialText = "" }: TextCorrectorProps) => {
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
-    const savedKey = localStorage.getItem("openai_api_key");
-    if (savedKey) {
-      setApiKey(savedKey);
-    } else {
-      setShowSettings(true);
-    }
+    (async () => {
+      try {
+        const { value } = await Preferences.get({ key: "openai_api_key" });
+        if (value) {
+          setApiKey(value);
+        } else {
+          setShowSettings(true);
+        }
+      } catch (e) {
+        // Fallback to localStorage if Preferences fails
+        const savedKey = localStorage.getItem("openai_api_key");
+        if (savedKey) {
+          setApiKey(savedKey);
+        } else {
+          setShowSettings(true);
+        }
+      }
+    })();
   }, []);
+
+  const saveApiKey = async () => {
+    if (!apiKey.trim()) {
+      toast.error("Podaj klucz API");
+      return;
+    }
+    
+    try {
+      // Save using Capacitor Preferences
+      await Preferences.set({ key: "openai_api_key", value: apiKey.trim() });
+      
+      // Also save directly to SharedPreferences using a simple approach
+      // We'll use a JavaScript bridge to call native Android code
+      if ((window as any).Android && (window as any).Android.saveApiKey) {
+        (window as any).Android.saveApiKey(apiKey.trim());
+      }
+      
+      // Also mirror to localStorage for web fallback
+      localStorage.setItem("openai_api_key", apiKey.trim());
+      
+      setShowSettings(false);
+      toast.success("Klucz API zapisany");
+    } catch (error) {
+      console.error("Error saving API key:", error);
+      toast.error("Błąd podczas zapisywania klucza API");
+    }
+  };
 
   useEffect(() => {
     if (initialText) {
       setInputText(initialText);
     }
   }, [initialText]);
-
-  const saveApiKey = () => {
-    if (!apiKey.trim()) {
-      toast.error("Podaj klucz API");
-      return;
-    }
-    localStorage.setItem("openai_api_key", apiKey.trim());
-    setShowSettings(false);
-    toast.success("Klucz API zapisany");
-  };
 
   const correctText = async () => {
     if (!inputText.trim()) {
