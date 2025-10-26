@@ -14,6 +14,8 @@ public class ProcessTextActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Disable transition animations to avoid visual flashes
+        overridePendingTransition(0, 0);
         try {
             Log.d(TAG, "ProcessTextActivity started");
 

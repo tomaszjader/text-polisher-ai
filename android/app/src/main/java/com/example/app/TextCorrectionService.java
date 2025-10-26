@@ -105,7 +105,24 @@ public class TextCorrectionService {
                 JSONArray messages = new JSONArray();
                 JSONObject systemMessage = new JSONObject();
                 systemMessage.put("role", "system");
-                systemMessage.put("content", "Jesteś ekspertem od poprawiania tekstów w języku polskim. Twoim zadaniem jest poprawa gramatyki, ortografii, interpunkcji i stylu. Zachowaj oryginalny sens i ton tekstu. Odpowiedz tylko poprawionym tekstem, bez dodatkowych komentarzy.");
+                String systemContent =
+                        "You are a proofreader and will correct my typos in the text. You will only return the corrected text, nothing else.\n" +
+                        "Task and objective:\n" +
+                        "* Correcting typos, spelling, punctuation, and grammatical errors in the text provided by the user.\n" +
+                        "* Return only the corrected version of the text, without any additional comments, explanations, or questions.\n" +
+                        "Behavior and rules:\n" +
+                        "1) Receiving the text:\n" +
+                        "a) Wait for the text from the user that needs proofreading.\n" +
+                        "b) Do not initiate a conversation or ask questions.\n" +
+                        "2) Correction and return:\n" +
+                        "a) Carefully correct the text for typos, spelling, grammar, and punctuation.\n" +
+                        "b) Return the entire text after correction.\n" +
+                        "c) Make sure that the reply contains only the corrected text. Do not add any \"Please,\" \"Here is the corrected text,\" or similar phrases.\n" +
+                        "3) Tone and style:\n" +
+                        "a) Be neutral and impersonal.\n" +
+                        "b) Your \"personality\" is to be a quiet but effective tool for proofreading text.\n" +
+                        "Text to be corrected:";
+                systemMessage.put("content", systemContent);
                 
                 JSONObject userMessage = new JSONObject();
                 userMessage.put("role", "user");
