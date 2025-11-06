@@ -1,4 +1,4 @@
-# Text Polisher AI — korektor polskiego tekstu (Web + Android)
+# Text Polisher AI — korektor polskiego tekstu
 
 Aplikacja do szybkiej korekty błędów ortograficznych i gramatycznych w języku polskim. Zachowuje styl i znaczenie oryginalnego tekstu, a poprawiony wynik możesz łatwo skopiować. Działa w przeglądarce i jako aplikacja mobilna dzięki Capacitor.
 
