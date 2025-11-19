@@ -51,4 +51,4 @@ Uwagi:
 - Capacitor (`@capacitor/app`, `@capacitor/preferences`)
 
 ## Bezpieczeństwo klucza API
-Klucz API OpenAI jest zapisywany lokalnie na urządzeniu użytkownika i nie jest wysyłany na żaden backend tej aplikacji. Dbaj o jego poufność (np. nie udostępniaj urządzenia osobom trzecim).
+Klucz API OpenAI jest zapisywany lokalnie na urządzeniu użytkownika i nie jest wysyłany na żaden backend tej aplikacji.
